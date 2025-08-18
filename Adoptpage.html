@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adoptpage</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <style>
+    /* General Reset & Font */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body, html {
+      height: 100%;
+      overflow-x: hidden;
+    }
+
+    /* Vanta Background */
+    #vanta-bg {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    /* Header Styling (adjusted padding as navbar is removed) */
+    header {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      text-align: center;
+      padding: 20px 0; /* Reverted to original padding */
+      backdrop-filter: blur(10px);
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 2.5em;
+    }
+
+    .cry-message {
+      text-align: center;
+      color: #fff;
+      font-size: 1.2em;
+      padding: 10px 30px;
+      font-style: italic;
+      margin-top: 10px;
+      animation: fade 2s infinite alternate;
+    }
+
+    @keyframes fade {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      margin: 20px auto;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 900px;
+      color: white;
+      flex-wrap: wrap;
+    }
+
+    select, input[type="text"] {
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+      outline: none;
+    }
+    select option {
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+    }
+    input[type="text"]::placeholder {
+        color: #ddd;
+    }
+
+    /* Pet Cards Container */
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+      margin-top: 20px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+      min-height: 300px; /* Ensure space even if no cards */
+    }
+
+    /* Individual Pet Card */
+    .pet-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      color: white;
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .pet-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .pet-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .pet-card h2 {
+        margin-top: 0;
+        margin-bottom: 5px;
+        font-size: 1.8em;
+        color: #ffdddd;
+    }
+    .pet-card p {
+        font-size: 1em;
+        margin-bottom: 15px;
+        flex-grow: 1;
+        color: #ddd;
+    }
+
+    .adopt-btn {
+      margin-top: auto;
+      padding: 10px 20px;
+      background-color: #ff4b5c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      font-weight: 600;
+      box-shadow: 0 4px 10px rgba(255, 75, 92, 0.4);
+    }
+
+    .adopt-btn:hover {
+      background-color: #e03e4f;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(255, 75, 92, 0.6);
+    }
+
+    /* Play Sound Button */
+    #playSound {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: rgba(255,255,255,0.2);
+      color: white;
+      border: 1px solid white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      z-index: 99;
+      font-family: 'Poppins', sans-serif;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    #playSound:hover {
+        background-color: rgba(255,255,255,0.3);
+        transform: translateY(-2px);
+    }
+
+    /* No Results Message */
+    .no-results-message {
+        color: #fff;
+        text-align: center;
+        grid-column: 1 / -1;
+        font-size: 1.2em;
+        margin-top: 50px;
+    }
+
+    /* Modal Overlay (Shared for Chatbot and Scheduling) */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Modal Content (Shared Base Style) */
+    .modal-content {
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 40px;
+      width: 90%;
+      max-width: 650px;
+      color: white;
+      position: relative;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
+      transform: translateY(-50px) scale(0.95);
+      transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.4s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .modal-overlay.active .modal-content {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 2em;
+      color: rgba(255, 255, 255, 0.8);
+      cursor: pointer;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .modal-close-btn:hover {
+      color: #ff4b5c;
+      transform: rotate(90deg);
+    }
+
+    .modal-content h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 2.2em;
+      color: #ff4b5c;
+      text-shadow: 0 0 10px rgba(255, 75, 92, 0.5);
+    }
+
+    .modal-pet-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+    .modal-pet-info img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-right: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.6);
+    }
+    .modal-pet-info div {
+        text-align: left;
+    }
+    .modal-pet-info h3 {
+        margin: 0;
+        font-size: 1.6em;
+        color: #fff;
+    }
+    .modal-pet-info p {
+        margin: 5px 0 0;
+        font-size: 1em;
+        color: #ccc;
+    }
+
+    .modal-section {
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+    .modal-section:last-of-type {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    .modal-section h3 {
+        color: #ff4b5c;
+        margin-bottom: 15px;
+        font-size: 1.6em;
+        text-align: center;
+        text-shadow: 0 0 5px rgba(255, 75, 92, 0.3);
+    }
+    .modal-section p, .modal-section ul {
+        font-size: 1em;
+        line-height: 1.7;
+        color: #e0e0e0;
+    }
+    .modal-section ul {
+        list-style-type: '🐾 ';
+        margin-left: 25px;
+        padding: 0;
+    }
+    .modal-section li {
+        margin-bottom: 8px;
+    }
+
+    /* Form Styles (Shared for Chatbot Input and Scheduling Form) */
+    .modal-form label {
+        display: block;
+        margin-bottom: 15px;
+        color: #fff;
+        font-weight: 600;
+        text-align: left;
+    }
+    .modal-form input[type="text"],
+    .modal-form input[type="email"],
+    .modal-form input[type="tel"],
+    .modal-form input[type="date"],
+    .modal-form input[type="time"],
+    .modal-form select {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 30px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        background-color: rgba(255, 255, 255, 0.15);
+        color: white;
+        font-size: 1em;
+        transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+    .modal-form input[type="text"]:focus,
+    .modal-form input[type="email"]:focus,
+    .modal-form input[type="tel"]:focus,
+    .modal-form input[type="date"]:focus,
+    .modal-form input[type="time"]:focus,
+    .modal-form select:focus {
+        border-color: #ff4b5c;
+        background-color: rgba(255, 255, 255, 0.25);
+        outline: none;
+    }
+    .modal-form input::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+    .modal-form input[type="date"]::-webkit-calendar-picker-indicator,
+    .modal-form input[type="time"]::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+    }
+    .modal-form select option {
+        background-color: rgba(0, 0, 0, 0.95);
+        color: white;
+    }
+
+    .modal-form button[type="submit"], .modal-form .cancel-btn {
+        width: 100%;
+        padding: 15px;
+        background-color: #ff4b5c;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        font-size: 1.2em;
+        box-shadow: 0 5px 15px rgba(255, 75, 92, 0.5);
+        margin-top: 15px; /* Space between submit and cancel */
+    }
+
+    .modal-form button[type="submit"]:hover {
+        background-color: #e03e4f;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(255, 75, 92, 0.7);
+    }
+
+    .modal-form .cancel-btn {
+        background-color: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #ddd;
+        box-shadow: none;
+    }
+
+    .modal-form .cancel-btn:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px);
+        color: white;
+    }
+
+    #modalMessage {
+        text-align: center;
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 8px;
+        font-weight: bold;
+        color: #fff;
+        background-color: rgba(255, 255, 255, 0.1);
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    #modalMessage.success {
+        background-color: rgba(76, 175, 80, 0.2);
+        color: #4CAF50;
+    }
+    #modalMessage.error {
+        background-color: rgba(244, 67, 54, 0.2);
+        color: #F44336;
+    }
+
+    /* Chatbot Specific Styles */
+    #chatbotModal .modal-content {
+        max-width: 450px; /* Make chatbot narrower */
+        padding: 30px;
+    }
+
+    .chat-messages {
+        height: 300px;
+        overflow-y: auto;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .chat-message {
+        padding: 10px 15px;
+        border-radius: 15px;
+        max-width: 80%;
+        word-wrap: break-word;
+    }
+
+    .chat-message.bot {
+        background-color: #ff4b5c;
+        align-self: flex-start;
+        color: white;
+        border-bottom-left-radius: 5px;
+    }
+
+    .chat-message.user {
+        background-color: #00ccff;
+        align-self: flex-end;
+        color: white;
+        border-bottom-right-radius: 5px;
+    }
+
+    .chat-input-area {
+        display: flex;
+        gap: 10px;
+    }
+
+    .chat-input-area input {
+        flex-grow: 1;
+        margin-bottom: 0; /* Override default form margin */
+    }
+
+    .chat-input-area button {
+        width: auto;
+        padding: 10px 20px;
+        font-size: 1em;
+        box-shadow: none; /* No shadow for chat send button */
+    }
+
+    .chat-rejection-message {
+        text-align: center;
+        color: #F44336;
+        font-size: 1.1em;
+        margin-top: 20px;
+        font-weight: bold;
+        padding: 15px;
+        background-color: rgba(244, 67, 54, 0.1);
+        border-radius: 10px;
+        border: 1px solid rgba(244, 67, 54, 0.3);
+    }
+
+    /* Responsive for smaller screens */
+    @media (max-width: 768px) {
+        .filter-bar {
+            flex-direction: column;
+            width: 95%;
+            gap: 10px;
+        }
+        .container {
+            padding: 20px;
+        }
+        .modal-content {
+            padding: 25px;
+            max-width: 95%;
+        }
+        .modal-pet-info {
+            flex-direction: column;
+            text-align: center;
+            padding: 15px;
+        }
+        .modal-pet-info img {
+            margin-right: 0;
+            margin-bottom: 10px;
+        }
+        .modal-content h2 {
+            font-size: 1.8em;
+        }
+        .modal-section h3 {
+            font-size: 1.3em;
+        }
+        #chatbotModal .modal-content {
+            max-width: 95%;
+        }
+    }
+  </style>
+</head>
+<body>
+
+<div id="vanta-bg"></div>
+
+<header>
+  <h1>Adopt a Friend Today!</h1>
+  <p class="cry-message">🐾 I’m waiting for you... please don’t leave me alone 🐶😢</p>
+</header>
+
+<!-- Filter Bar -->
+<div class="filter-bar">
+  <input type="text" placeholder="Search by name or breed" id="searchInput">
+  <select id="animalType">
+    <option value="">All Animals</option>
+    <option value="dog">🐶 Dogs</option>
+    <option value="cat">🐱 Cats</option>
+  </select>
+  <select id="dogBreed">
+    <option value="">Dog Breed</option>
+    <option value="Golden Retriever">Golden Retriever</option>
+    <option value="Beagle">Beagle</option>
+  </select>
+  <select id="catBreed">
+    <option value="">Cat Breed</option>
+    <option value="Tabby">Tabby</option>
+    <option value="Siamese">Siamese</option>
+  </select>
+</div>
+
+<!-- Pet Cards -->
+<section class="container" id="petListings">
+  <div class="pet-card" data-animal="dog" data-breed="Golden Retriever">
+    <img src="https://placedog.net/500" alt="Buddy the Golden Retriever" />
+    <h2>Buddy</h2>
+    <p>Golden Retriever, 2 Years Old</p>
+    <button class="adopt-btn" data-pet-name="Buddy" data-pet-image-src="https://placedog.net/500" data-pet-details="Golden Retriever, 2 Years Old">Adopt Me</button>
+  </div>
+  <div class="pet-card" data-animal="dog" data-breed="Beagle">
+    <img src="https://placedog.net/501" alt="Max the Beagle" />
+    <h2>Max</h2>
+    <p>Beagle, 3 Years Old</p>
+    <button class="adopt-btn" data-pet-name="Max" data-pet-image-src="https://placedog.net/501" data-pet-details="Beagle, 3 Years Old">Adopt Me</button>
+  </div>
+  <div class="pet-card" data-animal="cat" data-breed="Siamese">
+    <img src="https://cdn2.thecatapi.com/images/ai6.jpg" alt="Milo the Siamese Cat" />
+    <h2>Milo</h2>
+    <p>Siamese Cat, 2 Years Old</p>
+    <button class="adopt-btn" data-pet-name="Milo" data-pet-image-src="https://cdn2.thecatapi.com/images/ai6.jpg" data-pet-details="Siamese Cat, 2 Years Old">Adopt Me</button>
+  </div>
+  <!-- Message for no search results -->
+  <div id="noResults" class="no-results-message" style="display: none;">
+    No pets found matching your criteria. Try adjusting your filters!
+  </div>
+</section>
+
+<!-- Chatbot Modal -->
+<div class="modal-overlay" id="chatbotModal">
+  <div class="modal-content">
+    <button class="modal-close-btn" id="closeChatbotModal">&times;</button>
+    <h2>Adoption Chat for <span id="chatPetName"></span></h2>
+    <div class="chat-messages" id="chatMessages">
+      <!-- Chat messages will appear here -->
+    </div>
+    <div class="chat-input-area">
+      <input type="text" id="chatInput" placeholder="Type your answer...">
+      <button id="sendChat">Send</button>
+    </div>
+    <div id="chatStatusMessage" class="chat-rejection-message" style="display: none;"></div>
+    <button class="cancel-btn" id="cancelChatbot">Cancel Adoption</button>
+  </div>
+</div>
+
+<!-- Scheduling Modal (Initially hidden) -->
+<div class="modal-overlay" id="schedulingModal">
+  <div class="modal-content">
+    <button class="modal-close-btn" id="closeSchedulingModal">&times;</button>
+    <h2>Schedule Adoption for <span id="schedulePetName"></span></h2>
+
+    <div class="modal-pet-info">
+        <img id="schedulePetImage" src="" alt="Pet Image">
+        <div>
+            <h3 id="schedulePetInfoName"></h3>
+            <p id="schedulePetInfoDetails"></p>
+        </div>
+    </div>
+
+    <div class="modal-section">
+      <h3>Your Information & Preferred Time</h3>
+      <form id="adoptionForm" action="/adoption_requests" method="post">
+        <label for="adopterName">Your Full Name: </label>
+        <input type="text" id="adopterName" name="adopterName" placeholder="John Doe" required><br></br>
+
+        <label for="adopterEmail">Your Email: </label><br>
+        <input type="email" id="adopterEmail" name="adopterEmail" placeholder="john.doe@example.com" required><br></br>
+
+        <label for="adopterPhone">Your Phone Number: </label><br>
+        <input type="tel" id="adopterPhone" name="adopterPhone" placeholder="(123) 456-7890" required><br></br>
+
+        <label for="meetingDate">Preferred Date: </label><br>
+        <input type="date" id="meetingDate" name="meetingDate" required><br></br>
+
+        <label for="meetingTime">Preferred Time Slot: </label><br>
+        <select id="meetingTime" name="meetingTime" required><br></br>
+          <option value="">Select a time</option>
+          <option value="10:00 AM">10:00 AM - 11:00 AM</option>
+          <option value="11:00 AM">11:00 AM - 12:00 PM</option>
+          <option value="01:00 PM">01:00 PM - 02:00 PM</option>
+          <option value="02:00 PM">02:00 PM - 03:00 PM</option>
+        </select><br></br>
+
+        <div id="scheduleMessage"></div>
+        <button type="submit">Submit Adoption Request</button>
+        <button type="button" class="cancel-btn" id="cancelScheduling">Cancel Adoption</button>
+      </form>
+    </div>
+
+    <div class="modal-section">
+      <h3>Important Information for Taking Your Pet Home</h3>
+      <ul>
+        <li>Carrier/Leash: Please bring a secure pet carrier for cats or a sturdy leash and collar for dogs.</li>
+        <li>Food: We will provide a small starter pack of their current food, but please have your preferred food ready at home.</li>
+        <li>Initial Vet Check: Schedule a vet visit within 3-5 days of adoption for a wellness check.</li>
+        <li>Safe Space: Prepare a quiet, comfortable space at home where your new pet can decompress and feel secure.</li>
+        <li>Patience: Your new pet will need time to adjust. Be patient, understanding, and provide plenty of love.</li>
+        <li>Identification: Ensure your pet wears their ID tag at all times. We will provide microchip registration details.</li>
+      </ul>
+      <p>Our team will discuss these details further during your scheduled meeting.</p>
+    </div>
+  </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+<script>
+  VANTA.FOG({
+    el: "#vanta-bg",
+    mouseControls: true,
+    touchControls: true,
+    gyroControls: false,
+    highlightColor: 0xffaaaa,
+    midtoneColor: 0x8888aa,
+    lowlightColor: 0x111133,
+    baseColor: 0x000000,
+    blurFactor: 0.7,
+    speed: 1.2,
+    zoom: 1.2
+  });
+
+ 
+
+  // --- Pet Filtering Logic ---
+  const searchInput = document.getElementById('searchInput');
+  const animalTypeFilter = document.getElementById('animalType');
+  const dogBreedFilter = document.getElementById('dogBreed');
+  const catBreedFilter = document.getElementById('catBreed');
+  const petCards = document.querySelectorAll('.pet-card');
+  const noResultsMessage = document.getElementById('noResults');
+
+  function filterPets() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const selectedAnimalType = animalTypeFilter.value;
+    const selectedDogBreed = dogBreedFilter.value;
+    const selectedCatBreed = catBreedFilter.value;
+    let anyVisibleCards = false;
+
+    dogBreedFilter.style.display = (selectedAnimalType === 'dog' || selectedAnimalType === '') ? 'inline-block' : 'none';
+    catBreedFilter.style.display = (selectedAnimalType === 'cat' || selectedAnimalType === '') ? 'inline-block' : 'none';
+
+    petCards.forEach(card => {
+      const animal = card.dataset.animal;
+      const breed = card.dataset.breed.toLowerCase();
+      const name = card.querySelector('h2').textContent.toLowerCase();
+      const details = card.querySelector('p').textContent.toLowerCase(); // Include details in search
+
+      const matchesSearch = name.includes(searchTerm) || breed.includes(searchTerm) || details.includes(searchTerm);
+      const matchesAnimalType = selectedAnimalType === '' || animal === selectedAnimalType;
+      
+      let matchesBreed = true;
+      if (animal === 'dog' && selectedDogBreed !== '') {
+        matchesBreed = (breed === selectedDogBreed.toLowerCase());
+      } else if (animal === 'cat' && selectedCatBreed !== '') {
+        matchesBreed = (breed === selectedCatBreed.toLowerCase());
+      } else if (selectedAnimalType === '') {
+          if (selectedDogBreed !== '' && animal === 'dog') {
+              matchesBreed = (breed === selectedDogBreed.toLowerCase());
+          } else if (selectedCatBreed !== '' && animal === 'cat') {
+              matchesBreed = (breed === selectedCatBreed.toLowerCase());
+          }
+      }
+
+      if (matchesSearch && matchesAnimalType && matchesBreed) {
+        card.style.display = 'flex';
+        anyVisibleCards = true;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    if (anyVisibleCards) {
+        noResultsMessage.style.display = 'none';
+    } else {
+        noResultsMessage.style.display = 'block';
+    }
+  }
+
+  // Event Listeners for filtering
+  searchInput.addEventListener('input', filterPets);
+  animalTypeFilter.addEventListener('change', filterPets);
+  dogBreedFilter.addEventListener('change', filterPets);
+  catBreedFilter.addEventListener('change', filterPets);
+
+  // Initial filter on page load
+  filterPets();
+
+
+  //  Chatbot and Scheduling Modals Logic 
+  const chatbotModal = document.getElementById('chatbotModal');
+  const closeChatbotModalBtn = document.getElementById('closeChatbotModal');
+  const cancelChatbotBtn = document.getElementById('cancelChatbot'); 
+  const chatMessagesDiv = document.getElementById('chatMessages');
+  const chatInput = document.getElementById('chatInput');
+  const sendChatBtn = document.getElementById('sendChat');
+  const chatPetNameSpan = document.getElementById('chatPetName');
+  const chatStatusMessage = document.getElementById('chatStatusMessage');
+
+  const schedulingModal = document.getElementById('schedulingModal');
+  const closeSchedulingModalBtn = document.getElementById('closeSchedulingModal');
+  const cancelSchedulingBtn = document.getElementById('cancelScheduling');
+  const schedulePetNameSpan = document.getElementById('schedulePetName');
+  const schedulePetImage = document.getElementById('schedulePetImage');
+  const schedulePetInfoName = document.getElementById('schedulePetInfoName');
+  const schedulePetInfoDetails = document.getElementById('schedulePetInfoDetails');
+  const adoptionForm = document.getElementById('adoptionForm');
+  const scheduleMessage = document.getElementById('scheduleMessage');
+
+  let currentPet = {}; // To store details of the pet being adopted
+  let currentQuestionIndex = 0;
+  let suitabilityScore = 0; // Higher score = more suitable
+
+  const chatQuestions = [
+    // Lifestyle & Home Environment
+    {
+      question: "Hello! Thank you for your interest in adopting. To ensure a safe and loving home, I need to ask a few questions. First, do you live in a house or an apartment?",
+      keywords: ["house", "home"],
+      negativeKeywords: ["apartment", "condo", "flat"], 
+      scoreEffect: 1,
+      rejectionThreshold: -2
+    },
+    {
+      question: "Do you own or rent your home? (If renting, does your lease allow pets?)",
+      keywords: ["own", "allowed", "lease permits", "yes"],
+      negativeKeywords: ["rent", "lease doesn't", "no pets allowed", "landlord says no"],
+      scoreEffect: 1,
+      rejectionThreshold: -2
+    },
+    {
+      question: "Are you financially prepared for food, vet visits, grooming, emergencies?",
+      keywords: ["yes", "prepared", "budget", "understand", "ready", "financially stable"],
+      negativeKeywords: ["no", "not really", "struggle", "expensive", "tight budget"],
+      scoreEffect: 1,
+      rejectionThreshold: -2
+    },
+    {
+      question: "Do you have access to a nearby veterinarian?",
+      keywords: ["yes", "nearby", "local", "have a vet", "know a vet"],
+      negativeKeywords: ["no", "far", "don't have"],
+      scoreEffect: 1,
+      rejectionThreshold: -2
+    },
+    {
+      question: "Are you looking for a dog, cat, or other pet?",
+      keywords: ["dog", "cat", "any"],
+      negativeKeywords: [],
+      scoreEffect: 0,
+      rejectionThreshold: -2
+    },
+    {
+      question: "Are you comfortable handling pets with behavior challenges (e.g., anxiety, shyness)?",
+      keywords: ["yes", "comfortable", "patient", "willing to work", "understand"],
+      negativeKeywords: ["no", "not comfortable", "prefer easy"],
+      scoreEffect: 1,
+      rejectionThreshold: -2
+    },
+  ];
+
+  function addChatMessage(message, sender) {
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('chat-message', sender);
+    msgDiv.textContent = message;
+    chatMessagesDiv.appendChild(msgDiv);
+    chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight; // Auto-scroll to bottom
+  }
+
+  function startChatbot() {
+    chatMessagesDiv.innerHTML = ''; // Clear previous chat
+    chatStatusMessage.style.display = 'none';
+    currentQuestionIndex = 0;
+    suitabilityScore = 0; // Reset score
+
+    addChatMessage("Hello! I'm here to help you with the adoption process. Let's start with a few questions to ensure a perfect match.", 'bot');
+    setTimeout(() => {
+        addChatMessage(chatQuestions[currentQuestionIndex].question, 'bot');
+    }, 1000); // Give a slight delay for bot's first message
+    chatInput.disabled = false;
+    sendChatBtn.disabled = false;
+    chatInput.focus();
+  }
+
+  sendChatBtn.addEventListener('click', () => {
+    const userMessage = chatInput.value.trim();
+    if (userMessage === '') return;
+
+    addChatMessage(userMessage, 'user');
+    chatInput.value = ''; // Clear input
+
+    processChatResponse(userMessage.toLowerCase());
+  });
+
+  chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      sendChatBtn.click();
+    }
+  });
+
+  function processChatResponse(userResponse) {
+    const currentQ = chatQuestions[currentQuestionIndex];
+    let isPositiveResponse = false;
+    let foundNegative = false;
+
+    // Check for positive keywords
+    for (const keyword of currentQ.keywords) {
+      if (userResponse.includes(keyword)) {
+        isPositiveResponse = true;
+        break;
+      }
+    }
+
+    // Check for negative keywords (overrides positive if both present)
+    for (const negKeyword of currentQ.negativeKeywords) {
+      if (userResponse.includes(negKeyword)) {
+        foundNegative = true;
+        break;
+      }
+    }
+
+    if (foundNegative) {
+      suitabilityScore -= 2; // More severe penalty for explicit negative answers
+    } else if (isPositiveResponse) {
+      suitabilityScore += currentQ.scoreEffect;
+    } else {
+      // If neither positive nor negative keywords are found, it's a neutral or vague answer
+      suitabilityScore -= 0.5; // Small penalty for vague/less ideal answers
+    }
+
+    // Check suitability after each answer
+    if (suitabilityScore <= currentQ.rejectionThreshold) {
+      setTimeout(() => {
+        chatStatusMessage.textContent = "Based on your responses, we believe the pet might not feel safe and secure with you at this time. We encourage you to review our adoption guidelines and consider applying again in the future.";
+        chatStatusMessage.style.display = 'block';
+        chatInput.disabled = true;
+        sendChatBtn.disabled = true;
+        addChatMessage("It seems we cannot proceed with the adoption at this moment. Please review our guidelines.", 'bot');
+      }, 1000);
+      return;
+    }
+
+    currentQuestionIndex++;
+
+    if (currentQuestionIndex < chatQuestions.length) {
+      setTimeout(() => {
+        addChatMessage(chatQuestions[currentQuestionIndex].question, 'bot');
+      }, 1000);
+    } else {
+      // All questions answered, and suitability is good
+      setTimeout(() => {
+        addChatMessage("Thank you for answering all our questions! You seem like a suitable adopter. Please proceed to schedule your meeting.", 'bot');
+        setTimeout(() => {
+          chatbotModal.classList.remove('active'); // Close chatbot
+          document.body.style.overflow = ''; // Restore scrolling
+          openSchedulingModal(currentPet.name, currentPet.imageSrc, currentPet.details); // Open scheduling
+        }, 1500);
+      }, 1000);
+    }
+  }
+
+  // --- Adopt Button Click (Opens Chatbot) ---
+  const adoptButtons = document.querySelectorAll('.adopt-btn');
+
+  adoptButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      currentPet = {
+        name: button.dataset.petName,
+        imageSrc: button.dataset.petImageSrc,
+        details: button.dataset.petDetails
+      };
+
+      chatPetNameSpan.textContent = currentPet.name;
+      chatbotModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      startChatbot(); // Initialize and start the chat
+    });
+  });
+
+  // --- Close Chatbot Modal ---
+  closeChatbotModalBtn.addEventListener('click', () => {
+    chatbotModal.classList.remove('active');
+    document.body.style.overflow = '';
+    chatInput.value = '';
+    chatStatusMessage.style.display = 'none';
+  });
+
+  // Handle Cancel button in chatbot
+  cancelChatbotBtn.addEventListener('click', () => {
+    closeChatbotModalBtn.click(); // Use the existing close logic
+  });
+
+  chatbotModal.addEventListener('click', (e) => {
+    if (e.target === chatbotModal) {
+      closeChatbotModalBtn.click(); // Use the button's click handler to ensure consistent closing logic
+    }
+  });
+
+
+  // --- Scheduling Modal Functions ---
+  function openSchedulingModal(petName, petImageSrc, petDetails) {
+    schedulePetNameSpan.textContent = petName;
+    schedulePetImage.src = petImageSrc;
+    schedulePetImage.alt = petName;
+    schedulePetInfoName.textContent = petName;
+    schedulePetInfoDetails.textContent = petDetails;
+
+    schedulingModal.classList.add('active');
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    adoptionForm.reset(); // Clear form fields
+    scheduleMessage.textContent = ''; // Clear any messages
+    scheduleMessage.classList.remove('success', 'error'); // Remove status classes
+  }
+
+  closeSchedulingModalBtn.addEventListener('click', () => {
+    schedulingModal.classList.remove('active');
+    document.body.style.overflow = ''; // Restore scrolling
+    adoptionForm.reset();
+    scheduleMessage.textContent = '';
+    scheduleMessage.classList.remove('success', 'error');
+  });
+
+  // Handle Cancel button in scheduling modal
+  cancelSchedulingBtn.addEventListener('click', () => {
+    closeSchedulingModalBtn.click(); // Use the existing close logic
+  });
+
+  schedulingModal.addEventListener('click', (e) => {
+    if (e.target === schedulingModal) {
+      closeSchedulingModalBtn.click();
+    }
+  });
+
+  adoptionForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    scheduleMessage.textContent = 'Submitting request...';
+    scheduleMessage.classList.remove('success', 'error');
+    scheduleMessage.style.color = '#ff4b5c';
+
+    const formData = new FormData(adoptionForm);
+    const data = {
+      petName: schedulePetNameSpan.textContent, // Use petName from scheduling modal
+      adopterName: formData.get('adopterName'),
+      adopterEmail: formData.get('adopterEmail'),
+      adopterPhone: formData.get('adopterPhone'),
+      meetingDate: formData.get('meetingDate'),
+      meetingTime: formData.get('meetingTime')
+    };
+
+    // --- Backend Integration Placeholder ---
+    // In a real application, you would send this data to your Flask backend
+    // Example:
+    // const API_BASE_URL = 'http://127.0.0.1:5000'; // Or your deployed backend URL
+    // try {
+    //   const response = await fetch(`${API_BASE_URL}/adoption_requests`, {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(data)
+    //   });
+    //   if (!response.ok) {
+    //     throw new Error(`HTTP error! status: ${response.status}`);
+    //   }
+    //   const result = await response.json();
+    //   scheduleMessage.classList.add('success');
+    //   scheduleMessage.textContent = 'Request submitted successfully! We will contact you soon.';
+    //   adoptionForm.reset();
+    //   setTimeout(() => {
+    //     // Redirect to index.html (dashboard) after successful submission
+    //     window.location.href = 'index.html'; 
+    //   }, 3000);
+    // } catch (error) {
+    //   console.error("Error submitting adoption request:", error);
+    //   scheduleMessage.classList.add('error');
+    //   scheduleMessage.textContent = 'Failed to submit request. Please try again.';
+    // }
+
+    // --- SIMULATED SUCCESS (REMOVE IN PRODUCTION) ---
+    console.log("Simulating adoption request submission:", data);
+    setTimeout(() => {
+      scheduleMessage.classList.add('success');
+      scheduleMessage.textContent = 'Request submitted successfully! We will contact you soon.';
+      adoptionForm.reset();
+      setTimeout(() => {
+        // Redirect to index.html (dashboard) after successful submission
+        window.location.href = 'Dashboard.html'; 
+      }, 3000);
+    }, 1500);
+  async function submitAdoptionRequest(data) {
+    const API_BASE_URL = 'http://127.0.0.1:5000';
+
+    const response = await fetch(`${API_BASE_URL}/adoption_requests`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+    alert(result.message);
+  }
+
+  });
+</script>
+<script>
+document.getElementById('adoptionForm').addEventListener('submit', function(event) {
+  event.preventDefault(); // Stop the form from submitting the default way
+
+  const data = {
+    petName: document.getElementById('petName').value,
+    adopterName: document.getElementById('adopterName').value,
+    adopterEmail: document.getElementById('adopterEmail').value,
+    adopterPhone: document.getElementById('adopterPhone').value,
+    meetingDate: document.getElementById('meetingDate').value,
+    meetingTime: document.getElementById('meetingTime').value
+  };
+
+  fetch('http://127.0.0.1:5000/adoption_requests', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("Something went wrong");
+    }
+    return response.json();
+  })
+  .then(result => {
+    alert(result.message); // Show success message
+    document.getElementById("adoptionForm").reset(); // Clear form
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert("Error submitting the form. Please try again.");
+  });
+});
+</script>
+
+
+</body>
+</html>
+
+

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Your Donations in Action: A look at our new medical wing - SafePaw Sanctuary</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+
+    <style>
+        /* Basic styles from the main page */
+        body, html {
+            margin: 0; padding: 0; height: 100%;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        #vanta-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Align content to the top */
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            text-align: center;
+            background: transparent;
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 0.3rem;
+        }
+
+        p.subtitle {
+            font-style: italic;
+            margin-top: 0;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .container {
+            max-width: 900px; /* Adjust max-width for content */
+            margin: 0 auto;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box; /* Include padding in width */
+        }
+
+        .box {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .box h2 {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .article-meta {
+            font-style: italic;
+            font-size: 0.9rem;
+            color: #ccc;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-meta a {
+            color: #ccc;
+            text-decoration: none;
+        }
+
+        .article-meta a:hover {
+            text-decoration: underline;
+        }
+
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin: 1.5rem auto;
+            display: block;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .article-content p {
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .back-to-blog {
+            display: inline-block;
+            margin-top: 2rem;
+            color: #ff4b5c;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .back-to-blog:hover {
+            color: #e03e4f;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            .box {
+                padding: 1.5rem;
+            }
+            .box h2 {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="vanta-bg"></div>
+
+    <div class="container">
+        <div class="box">
+            <h2>Your Donations in Action: A look at our new medical wing</h2>
+            <p class="article-meta">Published on July 15, 2025 by <a href="#">SafePaw Team</a> in <a href="#">Sanctuary Updates</a></p>
+
+            <div class="article-content">
+                <img src="new-medical-wing.png" alt="Inside the new medical wing at SafePaw Sanctuary">
+                <p>We are thrilled to announce the grand opening of our brand new, state-of-the-art medical wing at SafePaw Sanctuary! This incredible achievement would not have been possible without the unwavering generosity and support from donors like you. From the bottom of our hearts, thank you!</p>
+                <p>For years, we've dreamt of expanding our medical facilities to meet the growing needs of the animals in our care. Our old clinic, while functional, was becoming increasingly cramped and lacked the advanced equipment necessary for complex cases. Thanks to your incredible contributions, that dream is now a reality.</p>
+                <h3>What Our New Medical Wing Offers:</h3>
+                <ul>
+                    <li>Dedicated Examination Rooms: More space for thorough check-ups and routine examinations, allowing us to see more animals efficiently.</li>
+                    <li>Modern Surgical Suite: Equipped with the latest surgical tools and monitoring equipment, enabling us to perform life-saving operations with greater precision and safety.</li>
+                    <li>Recovery Wards: Comfortable, quiet, and climate-controlled areas for animals to recover post-surgery or during illness, with round-the-clock monitoring by our veterinary staff.</li>
+                    <li>Isolation Units: Separate, specialized areas for animals with contagious diseases, preventing the spread of illness throughout the sanctuary.</li>
+                    <li>Diagnostic Laboratory: On-site capabilities for blood tests, urinalysis, and other crucial diagnostics, leading to faster and more accurate diagnoses.</li>
+                </ul>
+                <p>This new facility significantly enhances our capacity to provide advanced medical care and emergency services to more animals in need. It means we can offer better treatment for injuries, manage chronic conditions more effectively, and improve the overall health outcomes for every creature that comes through our doors.</p>
+                <p>Every dollar you donated, every fundraiser you supported, every share of our appeals directly contributed to making this vital expansion a reality. Your belief in our mission has translated into tangible improvements that will save countless lives and alleviate suffering.</p>
+                <p>We invite you to follow our social media channels for more behind-the-scenes looks at the new medical wing and the incredible work being done there. Your support continues to be the heartbeat of SafePaw Sanctuary, and we are profoundly grateful for your partnership in animal welfare.</p>
+            </div>
+            <a href="BlogNews.html" class="back-to-blog">← Back to Blog & News</a>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+    <script>
+        VANTA.FOG({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            highlightColor: 0xffaaaa,
+            midtoneColor: 0x8888aa,
+            lowlightColor: 0x111133,
+            baseColor: 0x000000,
+            blurFactor: 0.7,
+            speed: 1.2,
+            zoom: 1.1
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register | SafePaw Sanctuary</title>
+
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+    }
+
+    #vanta-bg {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    .form-container {
+      position: relative;
+      z-index: 1;
+      width: 350px;
+      margin: 100px auto;
+      background: rgba(255, 255, 255, 0.1); 
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      backdrop-filter: blur(10px); /* glass effect */
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .form-container h2 {
+      margin-bottom: 20px;
+      color: #ffffff;
+    }
+
+    .form-container input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    .form-container input::placeholder {
+      color: #eee;
+    }
+
+    .form-container button {
+      width: 100%;
+      padding: 10px;
+      background-color: #ffffffcc;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .form-container button:hover {
+      background-color: #ffffff;
+    }
+
+    .login-link {
+      display: block;
+      margin-top: 15px;
+      color: #00ccff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="vanta-bg"></div>
+
+  <div class="form-container">
+    <h2>Register</h2>
+    <form id="registrationForm">
+      <input type="text" name="firstName" placeholder="First Name" required />
+      <input type="text" name="lastName" placeholder="Last Name" required />
+      <input type="date" name="dob" placeholder="DOB" required />
+      <input type="text" name="phoneNumber" placeholder="Phone Number" required />
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="password" name="password" placeholder="Password" id="password" required />
+      <button type="submit">Register</button>
+      <a href="login.html" class="login-link">Already have an account? Login</a>
+    </form>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.birds.min.js"></script>
+  <script>
+    VANTA.BIRDS({
+      el: "#vanta-bg",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      scale: 1.00,
+      scaleMobile: 1.00
+    });
+
+  
+    document.getElementById('registrationForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent default form submission
+
+      const email = this.email.value;
+      const password = this.password.value;
+
+      //Password Validation
+      // At least 8 characters, at least one letter and one number
+      const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+      if (!passwordRegex.test(password)) {
+        alert('Password must be at least 8 characters long and contain at least one letter and one number.');
+        return; // Stop the function if password is invalid
+      }
+
+      //Simulate Registration (using localStorage for demonstration)
+      // In a real application, you'd send this data to a server.
+      let users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+
+      // Check if user already exists
+      const userExists = users.some(user => user.email === email);
+      if (userExists) {
+        alert('This email is already registered. Please log in or use a different email.');
+        return;
+      }
+
+      // Add new user
+      users.push({ email: email, password: password });
+      localStorage.setItem('registeredUsers', JSON.stringify(users));
+
+      alert('Registration successful! Redirecting to login page.');
+
+      //Redirect to Login Page
+      window.location.href = 'login.html';
+    });
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Logged Out | SafePaw Sanctuary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        /* Basic Reset & Font */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Full page height for body */
+        body, html {
+            height: 100%;
+            /* Removed overflow: hidden from here to allow scrolling on the main container */
+        }
+
+        /* Vanta.js Background Container */
+        #vanta-bg {
+            position: fixed; /* Stays fixed in viewport */
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1; /* Send to back */
+        }
+
+        /* Main Content Container */
+        .logout-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh; /* Ensures it's at least full viewport height */
+            padding: 20px;
+            color: white;
+            text-align: center;
+            position: relative;
+            z-index: 1; /* Keep content above Vanta.js */
+            /* Glassmorphism effect */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            width: 90%; /* Responsive width */
+            max-width: 500px; /* Max width for desktop */
+            margin: 0 auto; /* Center horizontally */
+            /* Allow vertical scrolling if content overflows */
+            overflow-y: auto;
+            /* Add some padding to the top/bottom if content is shorter than viewport */
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+
+        /* Logo Styling */
+        .logo {
+            margin-bottom: 25px;
+        }
+
+        .logo img {
+            width: 120px; /* Adjust size as needed */
+            height: auto;
+            border-radius: 50%; /* Optional: for a rounded logo */
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Headline */
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* Body Text */
+        p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Security Note */
+        .security-note {
+            font-size: 0.95em;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 10px;
+            margin-bottom: 30px;
+            padding: 10px 15px;
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        /* Call to Action Button */
+        .login-button {
+            display: inline-block;
+            background-color: #ffffffcc; /* Slightly translucent white */
+            color: #000;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-decoration: none; /* For link styling */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            margin-bottom: 30px; /* Add space below button */
+        }
+
+        .login-button:hover {
+            background-color: #ffffff; /* Solid white on hover */
+            transform: translateY(-2px);
+        }
+
+        /* Feedback Section */
+        .feedback-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            width: 100%;
+            margin-top: 20px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        .feedback-section h2 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .rating-stars {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+
+        .star {
+            font-size: 2.5em;
+            cursor: pointer;
+            color: white; /* Default star color: white outline */
+            transition: color 0.2s ease, transform 0.1s ease;
+        }
+
+        .star.selected {
+            color: #007bff; /* Blue color for selected stars (filled) */
+            transform: scale(1.1);
+        }
+
+        .star:hover {
+            color: #0056b3; /* Darker blue on hover */
+            transform: scale(1.1);
+        }
+
+        .feedback-section textarea {
+            width: calc(100% - 20px); /* Account for padding */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.8);
+            color: #333;
+            font-size: 1em;
+            resize: vertical; /* Allow vertical resizing */
+            min-height: 80px;
+        }
+
+        .feedback-section button {
+            background-color: #5cb85c; /* Green submit button */
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .feedback-section button:hover {
+            background-color: #4cae4c;
+            transform: translateY(-1px);
+        }
+
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            p {
+                font-size: 1em;
+            }
+            .logout-container {
+                padding: 25px;
+                padding-top: 40px; /* Adjust padding for smaller screens */
+                padding-bottom: 40px;
+            }
+            .star {
+                font-size: 2em;
+            }
+            .feedback-section h2 {
+                font-size: 1.3em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.7em;
+            }
+            p {
+                font-size: 0.9em;
+            }
+            .logout-container {
+                padding: 15px;
+                width: 95%;
+                padding-top: 30px; /* Adjust padding for very small screens */
+                padding-bottom: 30px;
+            }
+            .login-button {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+            .star {
+                font-size: 1.8em;
+            }
+            .feedback-section h2 {
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Vanta.js Background -->
+    <div id="vanta-bg"></div>
+
+    <!-- Logout Content Container -->
+    <div class="logout-container">
+        <!-- Logo Placeholder -->
+        <div class="logo">
+            <img src="https://placehold.co/120x120/808080/FFFFFF?text=SafePaw" alt="SafePaw Sanctuary Logo">
+        </div>
+
+        <!-- Clear Headline -->
+        <h1>You have been successfully logged out!</h1>
+
+        <!-- Simple Body Text -->
+        <p>
+            Thank you for visiting SafePaw Sanctuary. We appreciate your support for our furry friends.
+        </p>
+
+        <!-- Security Note -->
+        <p class="security-note">
+            For your security, especially on public or shared computers, we recommend closing your browser window.
+        </p>
+
+        <!-- Call to Action -->
+        <a href="login.html" class="login-button">Log In Again</a>
+
+        <!-- Feedback Section -->
+        <div class="feedback-section">
+            <h2>Rate Your Experience & Leave Feedback</h2>
+            <div class="rating-stars" id="ratingStars">
+                <span class="star" data-value="1">☆</span> <!-- Changed to hollow star -->
+                <span class="star" data-value="2">☆</span> <!-- Changed to hollow star -->
+                <span class="star" data-value="3">☆</span> <!-- Changed to hollow star -->
+                <span class="star" data-value="4">☆</span> <!-- Changed to hollow star -->
+                <span class="star" data-value="5">☆</span> <!-- Changed to hollow star -->
+            </div>
+            <textarea id="feedbackText" placeholder="Tell us what you think (optional)"></textarea>
+            <button onclick="submitFeedback()">Submit Feedback</button>
+        </div>
+    </div>
+
+    <!-- Vanta.js Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.birds.min.js"></script>
+    <script>
+        VANTA.BIRDS({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            // You can customize colors here to match your brand if desired
+            // color1: 0xabcdef,
+            // color2: 0x123456,
+            // backgroundColor: 0x000000,
+            // birdColor: 0xffffff
+        });
+
+        let selectedRating = 0; // To store the user's selected rating
+
+        // Get all star elements
+        const stars = document.querySelectorAll('.star');
+
+        // Add click event listener to each star
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const value = parseInt(star.dataset.value);
+                selectedRating = value;
+
+                // Update star colors based on selection
+                stars.forEach(s => {
+                    if (parseInt(s.dataset.value) <= value) {
+                        s.classList.add('selected');
+                    } else {
+                        s.classList.remove('selected');
+                    }
+                });
+            });
+
+            // Add hover effect for better UX
+            star.addEventListener('mouseover', () => {
+                const value = parseInt(star.dataset.value);
+                stars.forEach(s => {
+                    if (parseInt(s.dataset.value) <= value) {
+                        s.style.color = '#0056b3'; // Darker blue on hover
+                    }
+                });
+            });
+
+            star.addEventListener('mouseout', () => {
+                stars.forEach(s => {
+                    // Only revert color if the star is not part of the currently selected rating
+                    if (parseInt(s.dataset.value) > selectedRating) {
+                        s.style.color = 'white'; // Revert to white outline if not selected
+                    }
+                });
+            });
+        });
+
+        // Function to submit feedback
+        function submitFeedback() {
+            const feedbackText = document.getElementById('feedbackText').value;
+
+            if (selectedRating === 0 && feedbackText.trim() === '') {
+                alert("Please select a rating or type some feedback before submitting.");
+                return;
+            }
+
+            let message = "Thank you for your feedback!";
+            if (selectedRating > 0) {
+                message += ` You rated us ${selectedRating} out of 5 stars.`;
+            }
+            if (feedbackText.trim() !== '') {
+                message += ` Your comments: "${feedbackText.trim()}"`;
+            }
+
+            alert(message);
+
+            // In a real application, you would send this data to a server:
+            // fetch('/api/feedback', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify({ rating: selectedRating, feedback: feedbackText })
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     alert("Feedback submitted successfully!");
+            //     // Clear form
+            //     selectedRating = 0;
+            //     document.getElementById('feedbackText').value = '';
+            //     stars.forEach(s => s.classList.remove('selected'));
+            // })
+            // .catch(error => {
+            //     console.error('Error submitting feedback:', error);
+            //     alert("Failed to submit feedback. Please try again later.");
+            // });
+
+            // Clear form (for this client-side demo)
+            selectedRating = 0;
+            document.getElementById('feedbackText').value = '';
+            stars.forEach(s => s.classList.remove('selected')); // Reset star colors
+        }
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+

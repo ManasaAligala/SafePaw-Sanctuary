@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Donate to SafePaw Sanctuary</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* Reset & font */
+    body, html {
+      margin: 0; padding: 0; height: 100%;
+      font-family: 'Poppins', sans-serif;
+      color: white;
+      overflow: hidden; /* for full screen vanta */
+    }
+
+    #vanta-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    /* Container and layout */
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      text-align: center;
+      background: transparent; /* no static bg since Vanta */
+    }
+
+    h1 {
+      font-weight: 700;
+      font-size: 2.5rem;
+      margin-bottom: 0.3rem;
+    }
+
+    p.subtitle {
+      font-style: italic;
+      margin-top: 0;
+      margin-bottom: 2rem;
+      font-weight: 400;
+    }
+
+    .container {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .box {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 15px;
+      padding: 2rem;
+      flex: 1 1 350px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      min-width: 320px;
+      backdrop-filter: blur(8px);
+    }
+
+    .box h2 {
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 1rem;
+      border-radius: 10px;
+      border: none;
+      font-size: 1rem;
+      font-family: 'Poppins', sans-serif;
+      background: rgba(255, 255, 255, 0.9);
+      color: #333;
+      box-sizing: border-box;
+      resize: vertical;
+    }
+
+    textarea {
+      min-height: 100px;
+    }
+
+    .payment-confirmation-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: white;
+      user-select: none;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    .payment-confirmation-label input[type="checkbox"] {
+      width: auto;
+      height: auto;
+      margin-right: 8px;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 12px;
+      background: #ff4b5c;
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      width: 100%;
+    }
+
+    button:hover {
+      background: #e03e4f;
+    }
+
+    /* Payment Method box */
+
+    .payment-box h2 {
+      margin-bottom: 1rem;
+    }
+
+    .payment-box h3 {
+      margin: 0.5rem 0 1rem 0;
+      font-weight: 700;
+    }
+
+    .instructions {
+      background: rgba(0,0,0,0.6);
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #fff;
+      margin-bottom: 15px;
+      max-width: 300px;
+      word-wrap: break-word;
+      line-height: 1.4;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .qr-image {
+      display: block;
+      margin: 0 auto 1rem auto;
+      max-width: 200px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+
+    .upi-id {
+      background: rgba(255, 255, 255, 0.9);
+      color: #333;
+      padding: 10px 15px;
+      border-radius: 12px;
+      font-weight: 700;
+      max-width: 220px;
+      margin: 0 auto;
+      user-select: all;
+    }
+
+    /* Responsive */
+
+    @media (max-width: 700px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .box {
+        max-width: 90vw;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="vanta-bg"></div>
+
+  <h1>Donate to SafePaw Sanctuary</h1>
+  <p class="subtitle">Your kindness saves lives 🐾💗</p>
+
+  <div class="container">
+    <div class="box your-details">
+      <h2>Your Details</h2>
+      <form onsubmit="handleDonate(event)">
+        <input type="text" placeholder="Your Name" required />
+        <input type="email" placeholder="Your Email" required />
+        <input type="number" placeholder="Donation Amount (₹)" min="1" required />
+        <textarea placeholder="Your Message (optional)"></textarea>
+
+        <label class="payment-confirmation-label">
+          <input type="checkbox" id="paymentConfirmed" required />
+          I confirm that I have completed the payment.
+        </label>
+
+        <button type="submit">💗 Submit Donation Details</button>
+      </form>
+    </div>
+
+    <div class="box payment-box">
+      <h2>Choose Payment Method</h2>
+      <h3>Scan &amp; Pay (UPI)</h3>
+      <div class="instructions">
+        Use any UPI app (PhonePe, Paytm, GPay, etc.) to scan the QR code and complete your payment.
+      </div>
+
+      <img src="donate.png" alt="UPI QR Code" class="qr-image" />
+
+      <h3>UPI ID</h3>
+      <div class="instructions">
+        Manually enter this UPI ID in your preferred UPI app and send your donation.
+      </div>
+      <div class="upi-id">your_upi_id@bank</div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+  <script>
+    VANTA.FOG({
+      el: "#vanta-bg",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      highlightColor: 0xffaaaa,
+      midtoneColor: 0x8888aa,
+      lowlightColor: 0x111133,
+      baseColor: 0x000000,
+      blurFactor: 0.7,
+      speed: 1.2,
+      zoom: 1.1
+    });
+
+    function handleDonate(event) {
+      event.preventDefault();
+      const form = event.target;
+      const name = form[0].value;
+      const email = form[1].value;
+      const amount = form[2].value;
+      const message = form[3].value;
+      const confirmed = form[4].checked;
+
+      if (!confirmed) {
+        alert("Please confirm that you have completed the payment.");
+        return;
+      }
+
+      alert(`Thank you, ${name} (Amount: ₹${amount}) for submitting your donation details!\nYour help means the world to our furry friends.🐶❤️\nPlease proceed to make your payment using the UPI options on the right.`);
+      form.reset();
+    }
+  </script>
+</body>
+</html>
